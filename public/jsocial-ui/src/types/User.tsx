@@ -1,14 +1,11 @@
-type User = {
-    id: number,
-    first_name: string,
-    last_name: string,
+import CurrentUser from "./CurrentUser";
+
+interface User extends CurrentUser {
     address: string,
     city: string,
     country: string,
     gender: number,
-    email: string,
     email_verified_at: string,
-    username: string,
     created_at: string,
     updated_at: string
 }
