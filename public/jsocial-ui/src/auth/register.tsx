@@ -1,8 +1,10 @@
 import { AcademicCapIcon, ArrowLongRightIcon } from "@heroicons/react/20/solid";
 import { CubeTransparentIcon } from "@heroicons/react/24/outline";
-import { NavLink } from "react-router-dom";
+import { NavLink, Navigate } from "react-router-dom";
 
 export default function Register() {
+    const _token = localStorage.getItem("token") as string;
+    if(_token) return <Navigate to="/" />
     return (
     <div className="min-h-screen bg-gray-100 flex flex-col justify-center sm:py-12">
         <div className="p-10 xs:p-0 mx-auto md:w-full md:max-w-md">

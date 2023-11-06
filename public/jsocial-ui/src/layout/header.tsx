@@ -1,13 +1,23 @@
 import { AcademicCapIcon, Bars3BottomLeftIcon } from "@heroicons/react/20/solid";
 import { useEffect, useState } from "react";
 import { userStateContext } from "../context/context-provider";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function Header() {
     const [userMenuOpenStatus, setUserMenuOpenStatus] = useState<boolean>(false);
     const { currentUser } = userStateContext();
+    const navigate = useNavigate();
 
     const handleUserMenuStatus = () => {
         setUserMenuOpenStatus(!userMenuOpenStatus);
+    }
+
+    const logout = () => {
+        localStorage.removeItem("token");
+        axios.get("logout").then(() => {
+            navigate("/login");
+        })
     }
 
     // useEffect(() => {
@@ -61,7 +71,7 @@ export default function Header() {
                                         <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Earnings</a>
                                     </li>
                                     <li>
-                                        <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Sign out</a>
+                                        <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem" onClick={logout}>Sign out</a>
                                     </li>
                                 </ul>
                             </div>

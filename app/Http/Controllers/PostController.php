@@ -6,6 +6,7 @@ use App\Models\Post;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Models\Comment;
+use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
@@ -16,6 +17,7 @@ class PostController extends Controller
     {
         return Post::withCount("comments")
             ->with("user")
+            ->orderByDesc("id")
             ->paginate(5);
     }
 
@@ -24,7 +26,16 @@ class PostController extends Controller
      */
     public function store(StorePostRequest $request)
     {
-        //
+        $post = new Post();
+        $user = Auth::user();
+        $post->details = $request->details;
+        $post->user_id = $user->id;
+        $post->save();
+
+        $post->user = $user;
+        $post->comments_count = 0;
+
+        return response()->json($post);
     }
 
     /**

@@ -7,29 +7,24 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
     public function login(Request $request)
     {
         try {
-            $validate = Validator::make($request->all(), [
+            $request->validate([
                 "email" => "required|email",
                 "password" => "required"
             ]);
 
-            if ($validate->fails()) {
-                return response()->json([
-                    "status" => "failed",
-                    "message" => $validate->errors()
-                ], 401);
-            }
 
             if (!Auth::attempt($request->only(["email", "password"]))) {
-                return response()->json([
+                throw ValidationException::withMessages([
                     "status" => "failed",
                     "message" => "Invalid credentials"
-                ], 401);
+                ]);
             }
 
             $user = User::where("email", $request->email)->first();

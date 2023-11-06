@@ -1,7 +1,5 @@
-import React, { Dispatch, SetStateAction, createContext, useContext, useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, createContext, useContext, useState } from "react";
 import User from "../types/User";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
 
 type StateContext = {
     currentUser: User,
@@ -10,7 +8,7 @@ type StateContext = {
     setToken: Dispatch<SetStateAction<string>>,
 }
 
-const StateContext = createContext<StateContext>({
+export const StateContext = createContext<StateContext>({
     currentUser: {
         address: "",
         city: "",
@@ -26,8 +24,8 @@ const StateContext = createContext<StateContext>({
         username: ""
     },
     token: "",
-    setCurrentUser: () => {},
-    setToken: () => {}
+    setCurrentUser: () => { },
+    setToken: () => { }
 });
 
 export const ContextProvider = ({ children }: { children: React.ReactNode }) => {
@@ -45,25 +43,9 @@ export const ContextProvider = ({ children }: { children: React.ReactNode }) => 
         email: "",
         username: ""
     });
+    
     const [token, setToken] = useState("");
-
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        const token = localStorage.getItem("token") as string;
-        console.log({token})
-        if (token) {
-            axios.defaults.headers.common.Authorization = `Bearer ${token}`
-            axios.get("user").then(({ data }) => {
-                setCurrentUser({
-                    ...data,
-                    token
-                })
-            })
-        } else {
-            navigate("/");
-        }
-    }, [])
+    
 
     return (
         <StateContext.Provider value={{

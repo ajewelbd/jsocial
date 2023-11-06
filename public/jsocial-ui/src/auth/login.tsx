@@ -2,9 +2,12 @@ import { AcademicCapIcon, ArrowLongRightIcon } from "@heroicons/react/20/solid";
 import { ArrowPathIcon, CubeTransparentIcon, InformationCircleIcon, LockClosedIcon } from "@heroicons/react/24/outline";
 import axios from "axios";
 import { FormEvent, useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, Navigate, useNavigate } from "react-router-dom";
 
 export default function Login() {
+    const _token = localStorage.getItem("token") as string;
+    if(_token) return <Navigate to="/" />
+
     const [credentials, setCredentials] = useState({ email: "", password: "" })
     const [errorMsg, setErrorMsg] = useState("")
     const [isAuthencating, setIsAuthencating] = useState(false)
@@ -16,17 +19,16 @@ export default function Login() {
         setIsAuthencating(true)
         console.log(credentials)
 
-        axios.post("http://127.0.0.1:8000/api/login", credentials).then(({ data }) => {
+        axios.post("login", credentials).then(({ data }) => {
             console.log(data)
             localStorage.setItem("token", data.token);
             naviagte("/")
         }).catch(e => {
-            if (e.response.status === 500) {
-                setErrorMsg("Something is wrong, please try again!");
-            } else setErrorMsg("Invalid credentials!")
+            console.log(e)
+            if (e.code === "ERR_NETWORK") setErrorMsg("Server unreachable!")
+            else if (e.response.status === 500) setErrorMsg("Something is wrong, please try again!");
+            else setErrorMsg("Invalid credentials!")
         }).finally(() => setIsAuthencating(false))
-        
-
     }
     return (
         <div className="min-h-screen bg-gray-100 flex flex-col justify-center sm:py-12">
