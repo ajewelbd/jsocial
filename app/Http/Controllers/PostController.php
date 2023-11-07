@@ -68,6 +68,7 @@ class PostController extends Controller
     public function comments(String $post_id)
     {
         return Comment::where("post_id", "!=", null)
+            ->with("user")
             ->where("post_id", "=", $post_id)
             ->get();
     }
