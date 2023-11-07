@@ -2,22 +2,13 @@ import { FormEvent, useEffect, useState } from "react"
 import Post from "../types/Post";
 import axios from "axios";
 // import { MapPinIcon, PaperClipIcon, PhotoIcon, XMarkIcon } from "@heroicons/react/20/solid";
-import {
-    Button,
-    Dialog,
-    Card,
-    CardHeader,
-    CardBody,
-    CardFooter,
-    Typography,
-    Input,
-    Checkbox,
-    Textarea,
-  } from "@material-tailwind/react";
 import Comments from "../comments/comments";
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../shadcn/components/ui/dialog";
+import { Button } from "../shadcn/components/ui/button";
+import { Textarea } from "../shadcn/components/ui/textarea";
 
 export default function MainContent() {
-    const [newPost, setPost] = useState({
+    const [newPost, setNewPost] = useState({
         details: ""
     })
     const [posts, setPosts] = useState<Post[]>([]);
@@ -67,7 +58,7 @@ export default function MainContent() {
 
     return (
         <>
-            <div className="p-4 sm:ml-64">
+            <div className="p-4 sm:ml-64 bg-slate-100">
                 <div className="flex flex-col gap-5 dark:border-gray-700 mt-11">
                     <div className="flex">
 
@@ -75,13 +66,33 @@ export default function MainContent() {
                             {/* <button className="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button" onClick={() => setNewPostModalVisibility(true)}>
                                 New Post
                             </button> */}
-                            <Button onClick={handleNewPostModalVisibility}>New Post</Button>
+                            {/* <Button onClick={handleNewPostModalVisibility}>New Post</Button> */}
+                            
+                            <Dialog>
+                                <DialogTrigger asChild>
+                                    <Button className="bg-gray-900">New Post</Button>
+                                </DialogTrigger>
+                                <DialogContent className="sm:max-w-[425px]">
+                                    <form onSubmit={sharePost}>
+                                        <DialogHeader>
+                                            <DialogTitle>New Post</DialogTitle>
+                                        </DialogHeader>
+                                        <div className="grid gap-4 py-4">
+                                            <Textarea name="details" onChange={({target}) => setNewPost({...newPost, details: target.value})}></Textarea>
+                                            <DialogClose asChild>
+                                                <Button type="submit" disabled={!newPost.details}>
+                                                    Share
+                                                </Button>
+                                            </DialogClose>
+                                        </div>
+                                    </form>
+                                </DialogContent>
+                            </Dialog>
                         </div>
 
                     </div>
                     <div className="flex">
                         <section className="flex flex-row flex-wrap mx-auto overflow-y-auto no-scrollbar" style={{ height: "calc(100vh - 150px)" }} id="posts" onScroll={handleScrollEnd}>
-
                             {posts.map(post => (
                                 <div
                                     className="transition-all duration-150 flex w-full px-4 py-3"
@@ -201,29 +212,6 @@ export default function MainContent() {
                     </div>
                 </div>
             </div>
-            <Dialog
-                size="xs"
-                open={newPostModalVisibility}
-                handler={handleNewPostModalVisibility}
-                className="bg-transparent shadow-none"
-            >
-                <form onSubmit={sharePost}>
-                    <Card className="mx-auto w-full max-w-[24rem]">
-                        <CardBody className="flex flex-col gap-4">
-                            <Typography variant="h4" color="blue-gray">
-                                New Post
-                            </Typography>
-                            <Textarea variant="standard" placeholder="Your thoughts..." onChange={({ target }) => setPost({ ...newPost, details: target.value })} />
-                        </CardBody>
-                        <CardFooter className="pt-0">
-                            <Button type="submit" variant="gradient" onClick={handleNewPostModalVisibility} fullWidth>
-                                Share
-                            </Button>
-                            <p className="ml-auto mt-1 text-xs text-gray-500 dark:text-gray-400">Remember, contributions to this topic should follow our <a href="#" className="text-blue-600 dark:text-blue-500 hover:underline">Community Guidelines</a>.</p>
-                        </CardFooter>
-                    </Card>
-                </form>
-            </Dialog>
         </>
     )
 }
