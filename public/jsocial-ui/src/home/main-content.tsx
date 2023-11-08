@@ -127,7 +127,7 @@ export default function MainContent() {
                                             className="flex flex-row flex-wrap w-full px-4 py-2 overflow-hidden text-sm text-justify text-gray-700"
                                         >
                                             {/* {readMore(post.splitted_details)} */}
-                                            {post.details}
+                                            {post.details}::{post.id}
                                         </p>
                                         <div className="px-4 py-2 overflow-hidden">
                                             <div className="flex flex-row items-center">

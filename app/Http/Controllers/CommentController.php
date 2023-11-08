@@ -34,6 +34,7 @@ class CommentController extends Controller
 
         $comment->save();
         $comment->user = $user;
+        $comment->replies_count = 0;
 
         return response()->json($comment);
     }

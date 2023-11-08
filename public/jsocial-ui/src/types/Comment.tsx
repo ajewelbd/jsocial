@@ -9,7 +9,7 @@ type Comment = {
     created_at: string | null,
     updated_at: string | null,
     user: User,
-    replies?: Array<any>
+    replies_count?: number
 }
 
 export default Comment;

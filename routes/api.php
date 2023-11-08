@@ -23,7 +23,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post("login", [AuthController::class, "login"]);
 Route::middleware("auth:sanctum")->group(function () {
-    Route::get("posts/{id}/comments", [PostController::class, "comments"]);
+    Route::get("posts/{id}/comments/{comment_id}", [PostController::class, "comments"]);
     Route::apiResource("posts", PostController::class);
     Route::apiResource("comments", CommentController::class);
     Route::get("logout", [AuthController::class, "logout"]);

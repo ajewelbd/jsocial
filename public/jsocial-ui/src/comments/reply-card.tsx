@@ -16,7 +16,7 @@ export default function ReplyCard({comment, updateComments}: {comment: Comment, 
             </div>
             <div className={`${isReplyCardVisbile ? "" : "hidden "}flex ml-6`}>
                 <button className="border px-1" onClick={replyCardVisibility}><XCircleIcon className="w-4 h-4"/></button>
-                <NewComment id={comment.id} updateComments={updateComments} callback={setIsReplyCardVisbile} commentId={comment.comment_id}/>
+                <NewComment id={comment.post_id} updateComments={updateComments} callback={setIsReplyCardVisbile} commentId={comment.comment_id}/>
             </div>
         </>
     )

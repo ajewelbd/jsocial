@@ -4,6 +4,7 @@ import { useState } from "react";
 import Comment from "../types/Comment";
 
 export default function NewComment({id, commentId, updateComments, callback}: NewCommentProps) {
+    console.log({id, commentId})
     const [newComment, setNewComment] = useState({
         comment: "",
         post_id: id,
@@ -34,7 +35,7 @@ export default function NewComment({id, commentId, updateComments, callback}: Ne
     return (
         <div className="w-full">
             <div className="flex gap-x-3 border rounded items-center pr-3 pl-1 py-0.5">
-                <input className="w-full h-7 text-xs focus:outline-none" placeholder="Your comment..." onChange={({ target }) => setNewComment({ ...newComment, comment: target.value })} />
+                <input className="w-full h-7 text-xs focus:outline-none" placeholder={`Your ${commentId ? "reply" : "comment"}...`} onChange={({ target }) => setNewComment({ ...newComment, comment: target.value })} />
                 {isSaving ? (
                     <ArrowPathIcon className="w-4 h-4 animate-spin" />
                 )

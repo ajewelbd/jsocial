@@ -65,10 +65,13 @@ class PostController extends Controller
     /**
      * Get the specified resource from storage.
      */
-    public function comments(String $post_id)
+    public function comments(String $post_id, String $comment_id)
     {
-        return Comment::where("comment_id", "=", null)
-            ->with("user", "replies")
+        $condition_value = $comment_id == 0 ? null : $comment_id;
+
+        return Comment::where("comment_id", "=", $condition_value)
+            ->with("user")
+            ->withCount("replies")
             ->where("post_id", "=", $post_id)
             ->get();
     }
