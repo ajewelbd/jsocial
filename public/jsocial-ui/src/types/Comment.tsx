@@ -8,7 +8,8 @@ type Comment = {
     comment_id: number | null,
     created_at: string | null,
     updated_at: string | null,
-    user: User
+    user: User,
+    replies?: Array<any>
 }
 
 export default Comment;

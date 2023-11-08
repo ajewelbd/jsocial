@@ -23,6 +23,6 @@ class Comment extends Model
 
     public function replies(): HasMany
     {
-        return $this->hasMany(Comment::class);
+        return $this->hasMany(Comment::class, "comment_id", "id");
     }
 }

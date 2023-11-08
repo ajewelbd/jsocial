@@ -2,47 +2,42 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import Comment from "../types/Comment";
 import { ArrowPathIcon, RectangleStackIcon } from "@heroicons/react/20/solid";
-import { ChatBubbleBottomCenterIcon, PaperAirplaneIcon } from "@heroicons/react/24/outline";
 import { ScrollArea } from "../shadcn/components/ui/scroll-area";
 import { timeFromNow } from "../helpers/message-time";
 import NewComment from "./new-comment";
+import ReplyCard from "./reply-card";
+import Replies from "./replies";
 
 export default function Comments({ id }: {id: number}) {
     const [comments, setComments] = useState<Array<Comment>>([])
     const [isLoading, setIsLoading] = useState(false)
-    const [isCommentSaving, setIsCommentSaving] = useState(false)
-
-    const [newComment, setNewComment] = useState({
-        comment: "",
-        post_id: id
-    })
 
     useEffect(() => {
         setIsLoading(true)
         axios.get(`posts/${id}/comments`).then(({ data }) => {
-            console.log(data)
+            // console.log(prepareComments(data))
             setComments(data);
         }).catch((e: unknown) => {
             console.log(e)
         }).finally(() => setIsLoading(false))
     }, [])
 
-    const submitComment = () => {
-        console.log(newComment)
-        if (newComment.comment) {
-            setIsCommentSaving(true)
-            axios.post("comments", newComment).then(({ data }) => {
-                setComments([...comments, data]);
-            })
-            .catch((e: unknown) => console.log(e))
-            .finally(() => {
-                setIsCommentSaving(false)
-            })
-        }
-    }
-
     const updateComments = (comment: Comment) => {
         setComments([...comments, comment]);
+    }
+
+    const prepareComments = (comments: Comment[]) => {
+        const _comments: Comment[] = [];
+        comments.forEach(comment => {
+            if (comment.comment_id) {
+                const parent = _comments.find(_comment => _comment.id === comment.comment_id);
+                parent && parent.replies?.push(comment)
+            } else {
+                _comments.push(comment)
+            }
+        })
+
+        console.log(_comments)
     }
 
     return (
@@ -70,9 +65,9 @@ export default function Comments({ id }: {id: number}) {
                                     </div>
                                 </div>
                                 <p className="ml-6 text-xs text-justify text-gray-700">{comment.comment}</p>
-                                <div className="ml-6 p-0.5 flex gap-x-1 mt-1 rounded bg-gray-200 max-w-fit cursor-pointer">
-                                    <ChatBubbleBottomCenterIcon className="w-4 h-4"/>
-                                    <p className="text-xs text-justify text-gray-700">Reply</p>
+                                <div className="flex gap-x-1 ml-6 mt-1 items-center">
+                                    <Replies />
+                                    <ReplyCard comment={comment} updateComments={updateComments}/>
                                 </div>
                             </div>
                         ))}
